@@ -1,13 +1,11 @@
 import { Hono } from "hono";
+import { signUp } from "./controller";
 
 export const medium = new Hono();
 
+medium.post("/signup", signUp);
 
 medium.post("/signin", (c) => {
-  return c.text("post userin Hono!");
-});
-
-medium.post("/signup", (c) => {
   return c.text("post userup Hono!");
 });
 
