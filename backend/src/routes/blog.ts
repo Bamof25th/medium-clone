@@ -1,3 +1,4 @@
+import { createBlogInput, updateBlogInput } from "@aniketbaghel/medium-common";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
@@ -17,16 +18,21 @@ export const blogRouter = new Hono<{
 blogRouter.use("/*", async (c, next) => {
   //get the header
   const token = c.req.header("authorization") || "";
-  //verify the header
-  const user = await verify(token, c.env.JWT_SECRET);
-  //if header is correct we need to process
-  if (user) {
-    c.set("userId", `${user.id}`);
-    await next();
-  } else {
-    // if not , we return the user 403 code
+  try {
+    //verify the header
+    const user = await verify(token, c.env.JWT_SECRET);
+    //if header is correct we need to process
+    if (user) {
+      c.set("userId", `${user.id}`);
+      await next();
+    } else {
+      // if not , we return the user 403 code
+      c.status(403);
+      return c.json({ error: "unauthorized" });
+    }
+  } catch (error) {
     c.status(403);
-    return c.json({ error: "unauthorized" });
+    return c.json({ message: "you are not logged in" });
   }
 });
 
@@ -36,6 +42,11 @@ blogRouter.post("/", async (c) => {
   }).$extends(withAccelerate());
 
   const body = await c.req.json();
+  const { success } = createBlogInput.safeParse(body);
+  if (!success) {
+    c.status(411);
+    return c.json({ message: "Inputs are not correct" });
+  }
   const userId = c.get("userId");
   console.log(body);
   const blog = await prisma.post.create({
@@ -53,6 +64,11 @@ blogRouter.put("/", async (c) => {
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
   const body = await c.req.json();
+  const { success } = updateBlogInput.safeParse(body);
+  if (!success) {
+    c.status(411);
+    return c.json({ message: "Inputs are not correct" });
+  }
   await prisma.post.update({
     where: {
       id: body.id,
@@ -77,7 +93,6 @@ blogRouter.get("/bulk", async (c) => {
     return c.json({ message: "error while fetching" });
   }
 });
-
 
 blogRouter.get("/:id", async (c) => {
   const prisma = new PrismaClient({

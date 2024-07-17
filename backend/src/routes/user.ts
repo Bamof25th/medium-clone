@@ -1,3 +1,4 @@
+import { signinInput, signupInput } from "@aniketbaghel/medium-common";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
@@ -16,7 +17,11 @@ userRouter.post("/signup", async (c) => {
   }).$extends(withAccelerate());
 
   const body = await c.req.json();
-
+  const { success } = signupInput.safeParse(body);
+  if (!success) {
+    c.status(411);
+    return c.json({ message: "Inputs are not correct" });
+  }
   const user = await prisma.user.create({
     data: {
       email: body.email,
@@ -38,6 +43,11 @@ userRouter.post("/signin", async (c) => {
   }).$extends(withAccelerate());
 
   const body = await c.req.json();
+  const { success } = signinInput.safeParse(body);
+  if (!success) {
+    c.status(411);
+    return c.json({ message: "Inputs are not correct" });
+  }
   const user = await prisma.user.findUnique({
     where: {
       email: body.email,
