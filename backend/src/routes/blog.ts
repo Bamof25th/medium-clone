@@ -86,8 +86,19 @@ blogRouter.get("/bulk", async (c) => {
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
   try {
-    const blogs = await prisma.post.findMany();
-    return c.json({ blogs });
+    const blogs = await prisma.post.findMany({
+      select: {
+        content: true,
+        title: true,
+        id: true,
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    return c.json(blogs);
   } catch (error) {
     c.status(403);
     return c.json({ message: "error while fetching" });
@@ -100,12 +111,26 @@ blogRouter.get("/:id", async (c) => {
   }).$extends(withAccelerate());
   try {
     const id = c.req.param("id");
-    const blogs = await prisma.post.findFirst({
+    const blog = await prisma.post.findFirst({
       where: {
         id: parseInt(id),
       },
+      select: {
+        content: true,
+        title: true,
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
-    return c.json({ blogs });
+    if (!blog) {
+      c.status(404);
+      return c.json({ meassage: "No blog found with id :" + id });
+    }
+
+    return c.json(blog);
   } catch (error) {
     c.status(403);
     return c.json({ message: "error while fetching" });

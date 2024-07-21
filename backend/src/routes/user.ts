@@ -24,6 +24,7 @@ userRouter.post("/signup", async (c) => {
   }
   const user = await prisma.user.create({
     data: {
+      name: body.name,
       email: body.email,
       password: body.password,
     },
@@ -62,4 +63,20 @@ userRouter.post("/signin", async (c) => {
 
   const jwt = await sign({ id: user.id }, c.env.JWT_SECRET);
   return c.json({ jwt });
+});
+
+userRouter.get("/getusers", async (c) => {
+  const prisma = new PrismaClient({
+    //@ts-ignore
+    datasourceUrl: c.env?.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  const user = await prisma.user.findMany();
+
+  if (!user) {
+    c.status(403);
+    return c.json({ error: "user not found" });
+  }
+
+  return c.json(user);
 });
