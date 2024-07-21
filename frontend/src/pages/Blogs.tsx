@@ -1,5 +1,6 @@
 import AppBar from "../components/AppBar";
 import { BlogSkeleton } from "../components/BlogSkeleton";
+import Error from "../components/Error";
 import { useBlogs } from "../hooks";
 import BlogCard from "./../components/BlogCard";
 
@@ -27,16 +28,20 @@ const Blogs = () => {
     <>
       <AppBar />
       <div>
-        {blogsData.map((blog, i) => (
-          <BlogCard
-            key={i}
-            authorName={blog.author.name || "Anonymous"}
-            publishDate={Date().slice(4, 21)}
-            title={blog.title}
-            content={blog.content}
-            id={blog.id}
-          />
-        ))}
+        {blogsData ? (
+          blogsData.map((blog, i) => (
+            <BlogCard
+              key={i}
+              authorName={blog.author.name || "Anonymous"}
+              publishDate={Date().slice(4, 21)}
+              title={blog.title}
+              content={blog.content}
+              id={blog.id}
+            />
+          ))
+        ) : (
+          <Error />
+        )}
       </div>
     </>
   );

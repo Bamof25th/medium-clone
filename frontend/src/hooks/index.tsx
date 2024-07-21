@@ -25,6 +25,10 @@ export const useBlogs = () => {
       .then((res) => {
         setBlogsData(res.data);
         setLoading(false);
+      })
+      .catch((err) => {
+        setBlogsData(err.data);
+        setLoading(false);
       });
   }, []);
 
@@ -34,8 +38,7 @@ export const useBlogs = () => {
   };
 };
 
-
-export const useBlog = ({id}: {id:number}) =>{
+export const useBlog = ({ id }: { id: number }) => {
   const [blog, setBlog] = useState<Blog>();
   const [loading, setLoading] = useState(true);
 
@@ -49,6 +52,9 @@ export const useBlog = ({id}: {id:number}) =>{
       .then((res) => {
         setBlog(res.data);
         setLoading(false);
+      }).catch((err) => {
+        setBlog(err.data);
+        setLoading(false);
       });
   }, [id]);
 
@@ -56,4 +62,4 @@ export const useBlog = ({id}: {id:number}) =>{
     loading,
     blog,
   };
-}
+};

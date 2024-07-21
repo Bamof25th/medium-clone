@@ -24,7 +24,7 @@ const Auth = ({ type }: { type: "signup" | "signin" }) => {
       if (responce) {
         toast.success("Successfully Loggedin!");
       }
-      navigate("/blogs");
+      navigate("/");
     } catch (error) {
       console.log(error);
       toast.error("Invalid Inputs");
