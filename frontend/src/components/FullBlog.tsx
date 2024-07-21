@@ -8,7 +8,10 @@ const FullBlog = ({ blog }: { blog: Blog }) => {
         <div className="col-span-8 ">
           <div className="text-5xl font-extrabold">{blog.title}</div>
           <div className="text-slate-500 pt-2">Posted on 2nd December 2023</div>
-          <div className="mt-5" dangerouslySetInnerHTML={{ __html: blog.content && blog.content }}/>
+          <div
+            className="mt-5"
+            dangerouslySetInnerHTML={{ __html: blog.content && blog.content }}
+          />
         </div>
         <div className="col-span-4 pt-10 ">
           <div className="text-lg text-slate-500 font-bold ">Author</div>
@@ -21,8 +24,8 @@ const FullBlog = ({ blog }: { blog: Blog }) => {
                 </div>
               </div>
               <div className="">
-                Random catch phrase about the author and the author's ability to
-                grab the users attention
+                “Don’t focus on having a great blog. Focus on producing a blog
+                that’s great for your readers.” – Brian Clark
               </div>
             </div>
           </div>
