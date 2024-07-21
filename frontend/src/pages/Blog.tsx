@@ -9,7 +9,7 @@ const Blog = () => {
   const { blog, loading } = useBlog({
     id: Number(id || ""),
   });
-  if (loading) {
+  if (loading || !blog) {
     return (
       <div className="flex flex-col justify-center h-screen">
         <div className="flex justify-center">

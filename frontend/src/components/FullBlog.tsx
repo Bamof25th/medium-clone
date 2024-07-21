@@ -1,6 +1,7 @@
-import { Avatar, BlogCardProps } from "./BlogCard";
+import { Blog } from "../hooks";
+import { Avatar } from "./BlogCard";
 
-const FullBlog = ({ blog }: { blog: BlogCardProps }) => {
+const FullBlog = ({ blog }: { blog: Blog }) => {
   return (
     <div className="flex justify-center ">
       <div className="grid grid-cols-12 px-10 w-full pt-10 gap-10 max-w-screen-2xl ">
